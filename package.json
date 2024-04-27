@@ -1,0 +1,33 @@
+{
+  "name": "dragdemo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "animate.css": "^4.1.1",
+    "autofit.js": "^3.1.0",
+    "echarts": "^5.5.0",
+    "element-plus": "^2.7.0",
+    "mathjs": "^12.4.1",
+    "pinia": "^2.1.7",
+    "vue": "^3.4.21",
+    "vue-draggable-plus": "^0.4.0",
+    "vue-router": "^4.3.0",
+    "xgplayer": "^3.0.16",
+    "xgplayer-flv": "^3.0.16"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.7",
+    "@vitejs/plugin-vue": "^5.0.4",
+    "less": "^4.2.0",
+    "typescript": "^5.2.2",
+    "typescript-vue-plugin": "^1.8.27",
+    "vite": "^5.2.0",
+    "vue-tsc": "^2.0.6"
+  }
+}
