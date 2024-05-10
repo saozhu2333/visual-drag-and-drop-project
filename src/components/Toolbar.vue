@@ -52,7 +52,7 @@ const undo = () => {
 const redo = () => {
   snapshotStore.redo();
 };
-let timer = ref<number | Timeout>(0)
+let timer = ref<number | NodeJS.Timeout>(0)
 /**
  * @函数功能:缩放 
  * @出口参数: 

@@ -2,18 +2,19 @@ import { defineStore } from "pinia";
 import { Ref, reactive, ref } from "vue";
 import { deepCopy } from "@/utils/utils";
 import generateID from "@/utils/generateID";
+import { Component } from "@/types/drag";
 
 export const useIndexStore = defineStore("index", () => {
   const editMode = ref("");
-  let curComponent: any = ref(null); //已选中的组件
-  let curComponentIndex: any = ref(null); //已选中的组件序号
+  let curComponent:Ref<Component | null |undefined> = ref(null); //已选中的组件
+  let curComponentIndex:Ref<number | null> = ref(null); //已选中的组件序号
   // 点击画布时是否点中组件，主要用于取消选中组件用。
   // 如果没点中组件，并且在画布空白处弹起鼠标，则取消当前组件的选中状态
   let isClickComponent = ref(false);
   //画布组件数据
-  const componentData: Ref<any> = ref([]);
+  const componentData: Ref<Component[]> = ref([]);
   //重写的时候一定要用ref ，reactive太恶心了
-  const canvasStyleData = reactive({
+  const canvasStyleData = reactive<any>({
     // 页面全局数据
     width: 1200,
     height: 740,
@@ -75,11 +76,11 @@ export const useIndexStore = defineStore("index", () => {
    */
   function setShapeStyle({ top, left, width, height, rotate }: any) {
     if (curComponent) {
-      if (top !== undefined) curComponent.value.style.top = Math.round(top);
-      if (left !== undefined) curComponent.value.style.left = Math.round(left);
-      if (width) curComponent.value.style.width = Math.round(width);
-      if (height) curComponent.value.style.height = Math.round(height);
-      if (rotate) {
+      if (top !== undefined && curComponent.value) curComponent.value.style.top = Math.round(top);
+      if (left !== undefined && curComponent.value) curComponent.value.style.left = Math.round(left);
+      if (width && curComponent.value) curComponent.value.style.width = Math.round(width);
+      if (height && curComponent.value) curComponent.value.style.height = Math.round(height);
+      if (rotate && curComponent.value) {
         curComponent.value.style.rotate = reSetRotate(Math.round(rotate));
       }
     }
@@ -129,18 +130,16 @@ export const useIndexStore = defineStore("index", () => {
    * @函数备注: 
    */  
   function setLinepropValue(val:any){
-    console.log(val[0].y,val[0].x,curComponent.value.style)
-    if(val[0].x < 0){
+    if(val[0].x < 0 && curComponent.value){
       calcline.x = -calcline.x + val.x
       console.log(calcline.x)
-      setShapeStyle({left:curComponent.value.style.left + calcline.x})
+      setShapeStyle({left:curComponent.value.style.left as number + calcline.x})
       val[0].x=0
       val[1].x += Math.abs(val[0].x)
-      console.log(curComponent.value.style.left + val[0].x,'x')
     }
-    if(val[0].y < 0){
+    if(val[0].y < 0  && curComponent.value){
       calcline.y = -calcline.y + val.y
-      setShapeStyle({top:curComponent.value.style.top + calcline.y})
+      setShapeStyle({top:curComponent.value.style.top as number + calcline.y})
       console.log(calcline.y)
       val[0].y=0
       val[1].y += Math.abs(val[0].y)
@@ -149,11 +148,10 @@ export const useIndexStore = defineStore("index", () => {
 
 
 
-    if (curComponent) {
+    if (curComponent.value) {
        curComponent.value.propValue.points = val;
      
     }
-    console.log(curComponent.value.propValue,val,3)
   }
   /**
    * @函数功能: 添加动画
@@ -162,21 +160,41 @@ export const useIndexStore = defineStore("index", () => {
    * @函数备注: 
    */
   function addAnimation(animate:any){
-    curComponent.value.animations.push(animate)
+    curComponent.value && curComponent.value.animations?.push(animate)
   }
   function removeAnimation(index:number){
-    curComponent.value.animations.splice(index,1)
+    curComponent.value && curComponent.value.animations?.splice(index,1)
   }
   function editAnimation(index:number,data = {}){
-     const original = curComponent.value.animations[index]
-     curComponent.value.animations[index] = {...original,...data}
+    let original
+    if(curComponent.value?.animations){
+      original = curComponent.value.animations[index]
+      curComponent.value.animations[index] = {...original,...data}
+    }
   }
+    /**
+   * @函数功能: 删除
+   * @param {number} index
+   * @出口参数:
+   * @函数备注:
+   */
+    function removecurComponent(index: number | undefined = undefined) {
+      if (index === undefined) {
+        index = curComponentIndex.value as number
+      }
+      if (index == curComponentIndex.value) {
+        curComponentIndex.value = null
+        curComponent.value = null
+      }
+      componentData.value.splice(index, 1)
+    }
   return {
     editMode,
     addComponent,
     componentData,
     setShapeStyle,
     setCurComponent,
+    removecurComponent,
     curComponent,
     curComponentIndex,
     isClickComponent,

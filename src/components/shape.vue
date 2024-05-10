@@ -20,6 +20,8 @@
       :style="getPointStyle(item)"
       @mousedown="handleMouseDownOnPoint(item, $event)"
     ></div>
+    <!-- 遮罩层，防开发改变数据、误触 -->
+    <div v-if="props.element.component == 'vVideo' || props.element.component == 'vSwitch'" :style="`position: absolute;width:${defaultStyle.width}px;height:${defaultStyle.height}px; z-index:9999;`"></div>
     <slot></slot>
   </div>
 
@@ -158,7 +160,7 @@ const getPoniteList = ()=>{
  * @函数备注: 
  */  
 const getCursor = () => {
-  const rotate = mod360(indexStore.curComponent.style.rotate); // 取余 360
+  const rotate = mod360(indexStore.curComponent!.style.rotate as number); // 取余 360
   const result = {};
   let lastMatchIndex = -1; // 从上一个命中的角度的索引开始匹配下一个，降低时间复杂度
 

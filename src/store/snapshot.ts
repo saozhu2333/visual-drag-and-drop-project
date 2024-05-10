@@ -23,7 +23,7 @@ export const useSnapshotStore = defineStore('snapshot', () => {
                 let needClean = true
                 //如果最后一步撤销默认将选中内容清空
                 if(componentData){
-                    needClean = !componentData.find((component:any) => indexStore.curComponent.id==component.id)
+                    needClean = !componentData.find((component:any) => indexStore.curComponent && indexStore.curComponent.id==component.id)
                 }
                 if(needClean){
                     indexStore.setCurComponent({component:null,index:null})

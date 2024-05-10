@@ -7,47 +7,69 @@
     <ul @mouseup="handleMouseUp">
       <template v-if="indexStore.curComponent">
         <template v-if="!indexStore.curComponent.isLock">
-          <!-- <li @click="copy">复制</li> -->
-          <!-- <li @click="paste">粘贴</li> -->
-          <!-- <li @click="cut">剪切</li> -->
+          <li @click="copy">复制</li>
+          <li @click="paste">粘贴</li>
+          <li @click="cut">剪切</li>
           <li @click="deleteComponent">删除</li>
           <!-- <li @click="lock">锁定</li> -->
           <li @click="topComponent">置顶</li>
           <li @click="bottomComponent">置底</li>
-          <!-- <li @click="upComponent">上移</li> -->
-          <!-- <li @click="downComponent">下移</li> -->
+          <li @click="upComponent">上移</li>
+          <li @click="downComponent">下移</li>
         </template>
         <!-- <li v-else @click="unlock">解锁</li> -->
       </template>
-      <!-- <li v-else @click="paste">粘贴</li> -->
+      <li v-else @click="paste">粘贴</li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { useContextMenuStore } from "@/store/contextmenu";
-import { useIndexStore } from "@/store";
-import { useSnapshotStore } from "@/store/snapshot";
-import component from "element-plus/es/components/tree-select/src/tree-select-option.mjs";
-const menuStore = useContextMenuStore();
-const indexStore = useIndexStore();
+import { ref } from 'vue'
+import { useContextMenuStore } from '@/store/contextmenu'
+import { useIndexStore } from '@/store/index'
+import { useSnapshotStore } from '@/store/snapshot'
+import { useCopyStore } from '@/store/copy'
+const menuStore = useContextMenuStore()
+const copyStore = useCopyStore()
+const indexStore = useIndexStore()
 const snapshotStore = useSnapshotStore()
 const handleMouseUp = () => {
-indexStore.setClickComponentStatus(true)
-};
+  indexStore.setClickComponentStatus(true)
+}
 const topComponent = () => {
-    menuStore.topComponent()
-    snapshotStore.recordSnapshot()
-};
+  menuStore.topComponent()
+  snapshotStore.recordSnapshot()
+}
 const bottomComponent = () => {
-    menuStore.bottomComponent()
-    snapshotStore.recordSnapshot()
-};
+  menuStore.bottomComponent()
+  snapshotStore.recordSnapshot()
+}
 const deleteComponent = () => {
-  indexStore.componentData.splice(indexStore.curComponentIndex,1)
-  indexStore.setCurComponent({component:null,index:null})
-};
+  if (indexStore.curComponentIndex) {
+    indexStore.removecurComponent(indexStore.curComponentIndex)
+    indexStore.setCurComponent({ component: null, index: null })
+  }
+}
+const copy = ()=>{
+  copyStore.copy()
+}
+const paste = ()=>{
+  copyStore.paste(true)
+  snapshotStore.recordSnapshot()
+}
+const cut = ()=>{
+  copyStore.cut()
+  snapshotStore.recordSnapshot()
+}
+const upComponent = ()=>{
+menuStore.upComponent()
+snapshotStore.recordSnapshot()
+}
+const downComponent = ()=>{
+  menuStore.downComponent()
+  snapshotStore.recordSnapshot()
+}
 </script>
 
 <style lang="less" scoped>

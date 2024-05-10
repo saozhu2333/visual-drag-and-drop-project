@@ -1,6 +1,6 @@
 import { getAssetsFile } from "@/utils/utils";
-
-const list = [
+import { Component } from "@/types/drag";
+const list:Component[] = [
   {
     component: "v-text", // 组件名称，需要提前注册到 Vue
     label: "文字", // 左侧组件列表中显示的名字
@@ -313,7 +313,7 @@ const list = [
 
 export default list;
 
-export const imgList = [
+export const imgList:Component[] = [
   {
     component: "vImg",
     label: "马里奥1",

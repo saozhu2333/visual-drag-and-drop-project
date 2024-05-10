@@ -20,9 +20,9 @@ export const useContextMenuStore = defineStore("ContextMenu", () => {
     }
     // 置顶功能
     const topComponent = ()=>{
-        if(indexStore.curComponentIndex < indexStore.componentData.length - 1){
+        if(indexStore.curComponentIndex!==null && indexStore.curComponentIndex < indexStore.componentData.length - 1){
             indexStore.componentData.splice(indexStore.curComponentIndex,1)
-            indexStore.componentData.push(indexStore.curComponent)
+            indexStore.curComponent && indexStore.componentData.push(indexStore.curComponent)
             indexStore.curComponentIndex = indexStore.componentData.length - 1
         }else{
             console.log('到顶了')
@@ -30,13 +30,35 @@ export const useContextMenuStore = defineStore("ContextMenu", () => {
     }
      // 置底功能
     const bottomComponent = ()=>{
-        if (indexStore.curComponentIndex > 0) {
+        if (indexStore.curComponentIndex!==null && indexStore.curComponentIndex > 0) {
             indexStore.componentData.splice(indexStore.curComponentIndex, 1)
-            indexStore.componentData.unshift(indexStore.curComponent)
+            indexStore.curComponent && indexStore.componentData.unshift(indexStore.curComponent)
             indexStore.curComponentIndex = 0
         } else {
             console.log('到底了')
         }
     }
-  return { menuTop,menuLeft,menuShow,showContextMenu,hideContextMenu,topComponent,bottomComponent  };
+    // 上移功能
+    const upComponent = ()=>{
+        if(indexStore.curComponentIndex!==null && indexStore.curComponentIndex < indexStore.componentData.length - 1){
+            indexStore.componentData.splice(indexStore.curComponentIndex,1)
+            indexStore.curComponent && indexStore.componentData.splice(indexStore.curComponentIndex+1,0,indexStore.curComponent)
+            indexStore.curComponentIndex = indexStore.curComponentIndex+1
+            console.log(indexStore.curComponentIndex)
+        }else{
+            console.log('到顶了')
+        }
+    }
+    // 下移功能
+    const downComponent = ()=>{
+        if (indexStore.curComponentIndex!==null && indexStore.curComponentIndex > 0) {
+            indexStore.componentData.splice(indexStore.curComponentIndex, 1)
+            indexStore.curComponent && indexStore.componentData.splice(indexStore.curComponentIndex-1,0,indexStore.curComponent)
+            indexStore.curComponentIndex = indexStore.curComponentIndex-1
+            console.log(indexStore.curComponentIndex)
+        } else {
+            console.log('到底了')
+        }
+    }
+  return { menuTop,menuLeft,menuShow,showContextMenu,hideContextMenu,topComponent,bottomComponent,upComponent,downComponent  };
 });
