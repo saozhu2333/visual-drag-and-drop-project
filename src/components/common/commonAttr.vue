@@ -10,12 +10,12 @@
           >
             <el-color-picker
               v-if="isIncludesColor(key)"
-              v-model="indexStore.curComponent.style[key]"
+              v-model="indexStore.curComponent!.style[key as keyof ComponentStyle] as string"
               show-alpha
             ></el-color-picker>
             <el-select
               v-else-if="selectKey.includes(key)"
-              v-model="indexStore.curComponent.style[key]"
+              v-model="indexStore.curComponent!.style[key  as keyof ComponentStyle]"
             >
               <el-option
                 v-for="item in optionMap[key]"
@@ -24,7 +24,7 @@
                 :value="item.value"
               ></el-option>
             </el-select>
-            <el-input v-else v-model.number="indexStore.curComponent.style[key]" @input="inputChange(key,indexStore.curComponent.style[key])" type="number" />
+            <el-input v-else v-model.number="indexStore.curComponent!.style[key as keyof ComponentStyle]" @input="inputChange(key,indexStore.curComponent!.style[key as keyof ComponentStyle] as number)" type="number" />
           </el-form-item>
         </el-form>
       </el-collapse-item>
@@ -36,6 +36,7 @@
 import { computed, ref } from "vue";
 import { useIndexStore } from "@/store";
 import { styleData, selectKey, optionMap } from "@/utils/attr";
+import { ComponentStyle } from "@/types/drag";
 const indexStore = useIndexStore();
 const activeCollapse = ref('style');
 const onChange = () => {};
@@ -46,10 +47,10 @@ const onChange = () => {};
  * @函数备注:
  */
 const styleKey = computed(() => {
-  const curComponentStyleKey = Object.keys(indexStore.curComponent.style);
+  const curComponentStyleKey = Object.keys(indexStore.curComponent!.style);
   return styleData.filter((item) => {
     //线段不可以设置高度
-    if(indexStore.curComponent.component=='lineBox' && item.key=='height'){
+    if(indexStore.curComponent && indexStore.curComponent.component=='lineBox' && item.key=='height'){
       return false
     }
     return curComponentStyleKey.includes(item.key)
@@ -72,7 +73,7 @@ const isIncludesColor = (str: string) => {
  */
 const inputChange = (key:string,value:number)=>{
   if(key=='rotate'){
-    indexStore.curComponent.style[key] = indexStore.reSetRotate(value)
+    indexStore.curComponent!.style[key] = indexStore.reSetRotate(value)
   }
 }
 </script>
