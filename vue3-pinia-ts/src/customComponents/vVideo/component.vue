@@ -27,7 +27,7 @@ const xgplayerDom = ref<HTMLElement | undefined>(undefined)
 onMounted(() => {
   xgplayer.value = new Player({
     el:xgplayerDom.value,
-    url: "https://rtmp01open.ys7.com:9188/v3/openlive/BB0427427_1_1.flv?expire=1745285788&id=704264698521391104&t=0974c433a6119a885f10ca9c7a83ac21576d5c82874a1c878e0bcaf6f4cb0a34&ev=100",
+    url: "//lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/byted-player-videos/1.0.0/xgplayer-demo.mp4",
     playsinline: true,
     isLive: true,
     plugins: [FlvPlugin],
